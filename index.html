@@ -346,7 +346,7 @@
     const elevAdj = heightFt / 3;
     const hc = windDir ? headComponent[windDir] : 0;
     const windAdj = windSpeed * (hc >= 0 ? hc * 1.0 : hc * 0.5);
-    const adjusted = (dist + elevAdj + windAdj) / (distPct / 100) / (spinPct / 100);
+    const adjusted = (dist + elevAdj + windAdj) / (distPct / 100);
 
     const lo = Math.round(adjusted) - 2;
     const hi = Math.round(adjusted) + 2;
