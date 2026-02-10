@@ -44,6 +44,10 @@
     letter-spacing: 0.8px;
     font-weight: 600;
   }
+  button {
+    -webkit-appearance: none;
+    touch-action: manipulation;
+  }
   input, select {
     width: 100%;
     padding: 12px 14px;
@@ -160,6 +164,7 @@
     inset: 10px;
     border: 1px solid #1e1e3a;
     border-radius: 50%;
+    pointer-events: none;
   }
   .compass-dir {
     position: absolute;
@@ -406,8 +411,14 @@
     } catch(e) {}
   }
 
+  // --- iOS touch compatibility ---
+  function addTap(el, handler) {
+    el.addEventListener('click', handler);
+    el.addEventListener('touchend', e => { e.preventDefault(); handler(); });
+  }
+
   // --- Reset ---
-  $('resetBtn').addEventListener('click', () => {
+  addTap($('resetBtn'), () => {
     $('distance').value = '';
     $('heightFt').value = '0';
     $('heightIn').value = '0';
@@ -425,7 +436,7 @@
 
   // --- Compass clicks ---
   document.querySelectorAll('.compass-dir').forEach(btn => {
-    btn.addEventListener('click', () => {
+    const handler = () => {
       const wasActive = btn.classList.contains('active');
       document.querySelectorAll('.compass-dir').forEach(b => b.classList.remove('active'));
       if (!wasActive) {
@@ -435,7 +446,8 @@
         $('windDesc').textContent = 'No wind selected';
       }
       calc();
-    });
+    };
+    addTap(btn, handler);
   });
 
   // --- Input listeners ---
@@ -443,13 +455,14 @@
 
   // --- Lie preset clicks ---
   document.querySelectorAll('.lie-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    const handler = () => {
       document.querySelectorAll('.lie-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       $('distPct').value = btn.dataset.dist;
       $('spinPct').value = btn.dataset.spin;
       calc();
-    });
+    };
+    addTap(btn, handler);
   });
 
   // Clear active preset when user manually edits dist% or spin%
